@@ -2,10 +2,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 import projectHighlightsReducer from './slices/projectHighlightSlice'
 import currencyReducer from './slices/currencySlice'
+import colorReducer from './slices/colorSlice'
 
 const reducers = combineReducers({
   projectHighlight: projectHighlightsReducer,
-  currency: currencyReducer
+  currency: currencyReducer,
+  color: colorReducer
 })
 
 const store = configureStore({

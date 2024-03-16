@@ -1,9 +1,8 @@
 import React from 'react'
-import { styled } from '@mui/material/styles'
-import Tooltip, { type TooltipProps, tooltipClasses } from '@mui/material/Tooltip'
 import { Box } from '@mui/material'
-// import { useTypeDispatch } from '../../services/hooks'
-// import { projectHovered, projectUnHovered } from '../../services/slices/projectHighlightSlice'
+import Tooltip from '@mui/material/Tooltip'
+import { useTypeDispatch } from '../../services/hooks'
+import { projectHovered, projectUnHovered } from '../../services/slices/projectHighlightSlice'
 
 interface ProgressLineProps {
   width: string
@@ -14,26 +13,20 @@ interface ProgressLineProps {
 }
 
 export default function ProgressLine (props: ProgressLineProps): JSX.Element {
-  // const dispatch = useTypeDispatch()
+  const dispatch = useTypeDispatch()
 
-  const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-  ))({
-    [`& .${tooltipClasses.tooltip}`]: {
-      maxWidth: 400
+  const handleOnHover = (hovered: boolean): void => {
+    if (props.hoverHiglight) {
+      hovered ? dispatch(projectHovered(props.mostLost)) : dispatch(projectUnHovered())
     }
-  })
-
-  // const handleOnHover = (hovered: boolean): void => {
-  //   if (props.hoverHiglight) {
-  //     hovered ? dispatch(projectHovered(props.mostLost)) : dispatch(projectUnHovered())
-  //   }
-  // }
+  }
 
   if (props.tooltip === undefined) {
     return (
       <Box
         width={`${props.width}%`}
+        onMouseOver={() => { handleOnHover(true) }}
+        onMouseOut={() => { handleOnHover(false) }}
         sx={{
           backgroundColor: props.backgroundColor,
           transition: 'width 2s'
@@ -43,19 +36,28 @@ export default function ProgressLine (props: ProgressLineProps): JSX.Element {
   }
 
   return (
-    <CustomWidthTooltip
+    <Tooltip
       title={props.tooltip}
-      placement='top'
+      placement='bottom'
       arrow
+      componentsProps={{
+        tooltip: {
+          sx: {
+            maxWidth: '400px'
+          }
+        }
+      }}
     >
       <Box
         width={`${props.width}%`}
-        // onMouseOver={() => { handleOnHover(true) }}
-        // onMouseOut={() => { handleOnHover(false) }}
+        onMouseOver={() => { handleOnHover(true) }}
+        onMouseOut={() => { handleOnHover(false) }}
         sx={{
-          backgroundColor: props.backgroundColor
+          backgroundColor: props.backgroundColor,
+          transition: 'width 2s'
         }}
-      />
-    </CustomWidthTooltip>
+      >
+      </Box>
+    </Tooltip>
   )
 };

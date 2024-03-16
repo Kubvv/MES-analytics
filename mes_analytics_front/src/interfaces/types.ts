@@ -1,8 +1,18 @@
+interface Election {
+  name: string
+  initialBudget: number
+  voteCount: number
+  finalBudgetPerVoter: number
+  exhaust: boolean
+  projects: Project[]
+}
+
 interface Project {
   name: string
   roundNumber: number
   cost: number
   voteCount: number
+  effectiveVoteCount: number
   initialBudget: number
   finalBudget: number
   wasPicked: boolean
@@ -16,7 +26,7 @@ interface ElectionFormValues {
 }
 
 type Order = 'asc' | 'desc'
-type SortableProjectkey = 'roundNumber' | 'name' | 'cost' | 'voteCount' | 'finalBudget'
+type SortableProjectkey = 'roundNumber' | 'name' | 'cost' | 'voteCount' | 'effectiveVoteCount' | 'finalBudget'
 type Currency = 'zł' | '$' | '€' | '£'
 type Language = 'en' | 'pl' | 'fr'
 
@@ -24,6 +34,7 @@ interface CurrencyWrapper { currency: Currency }
 interface LanguageWrapper { language: Language }
 
 export type {
+  Election,
   Project,
   ElectionFormValues,
   Order,

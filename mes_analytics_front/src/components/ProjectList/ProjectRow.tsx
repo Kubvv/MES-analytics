@@ -4,11 +4,7 @@ import { Link, Popover, TableCell, TableRow, Typography } from '@mui/material'
 import { type Project } from '../../interfaces/types'
 import GeneralProgressLine from '../ProgressLine/GeneralProgressLine'
 import ProjectPopover from '../ProjectPopover/ProjectPopover'
-
-const notEnoughInitialBudgetColor = 'rgba(255, 102, 102, 0.75)'
-const notEnoughFinalBugdetColor = 'rgba(255, 200, 102, 0.75)'
-const pickedColor = 'rgb(46, 200, 46, 0.75)'
-const pickedColorHighlighted = 'rgb(46, 200, 46, 0.25)'
+import { notEnoughFinalBugdetColor, notEnoughInitialBudgetColor, pickedColorHighlighted, pickedColor } from '../../interfaces/colors'
 
 interface ProjectRowProps {
   project: Project
@@ -58,12 +54,13 @@ export default function ProjectHeader (props: ProjectRowProps): JSX.Element {
           fontWeight={400}
           fontSize={16}
           onClick={(e) => { handleLinkClick(e) }}
-          style={{ textDecoration: 'none', cursor: 'pointer', color: 'black' }}>
+          sx={{ cursor: 'pointer', color: 'black', textDecorationColor: 'black' }}>
             {props.project.name}
         </Link>
       </TableCell>
       <TableCell align="right"><Typography fontWeight={400} fontSize={16}>{props.project.cost}{currentCurrency}</Typography></TableCell>
       <TableCell align="right"><Typography fontWeight={400} fontSize={16}>{props.project.voteCount}</Typography></TableCell>
+      <TableCell align="right" width={'10%'}><Typography fontWeight={400} fontSize={16}>{Math.round(props.project.effectiveVoteCount)}</Typography></TableCell>
       <TableCell align="right" width={'25%'} sx={{ padding: '12px' }}>
         <GeneralProgressLine
           project={props.project}

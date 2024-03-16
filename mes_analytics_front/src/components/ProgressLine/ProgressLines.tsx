@@ -8,12 +8,17 @@ interface MarkerType {
   text: string
 }
 
+export interface WidthType {
+  key: string
+  width: string
+}
+
 interface ProgressLinesProps {
   maxWidth: number
-  widths: string[]
+  widths: WidthType[]
   mostLost: string[]
-  upperMarker: MarkerType
-  lowerMarker: MarkerType
+  upperMarker: MarkerType | undefined
+  lowerMarker: MarkerType | undefined
   backgroundColors: string[]
   tooltips: JSX.Element[] | undefined
   hoverHiglights: boolean[] | undefined
@@ -28,11 +33,13 @@ export default function ProgressLines (props: ProgressLinesProps): JSX.Element {
       display='flex'
       direction='column'
     >
-      <Marker
-        marker={props.upperMarker}
-        paddingBottom='2px'
-        isTop
-      />
+      {props.upperMarker !== undefined && (
+        <Marker
+          marker={props.upperMarker}
+          paddingBottom='2px'
+          isTop
+        />
+      )}
       <Box
         display='flex'
         height='12px'
@@ -45,8 +52,8 @@ export default function ProgressLines (props: ProgressLinesProps): JSX.Element {
       >
         {props.widths.map((width, idx) => (
           <ProgressLine
-            key={idx}
-            width={width}
+            key={width.key}
+            width={width.width}
             mostLost={props.mostLost}
             backgroundColor={props.backgroundColors[idx]}
             tooltip={tooltips[idx]}
@@ -54,11 +61,13 @@ export default function ProgressLines (props: ProgressLinesProps): JSX.Element {
           />
         ))}
       </Box>
-      <Marker
-        marker={props.lowerMarker}
-        paddingBottom='5px'
-        isTop={false}
-      />
+      {props.lowerMarker !== undefined && (
+        <Marker
+          marker={props.lowerMarker}
+          paddingBottom='5px'
+          isTop={false}
+        />
+      )}
     </Stack>
   )
 };

@@ -56,7 +56,7 @@ async function fetchCheck (
   if (response.ok) {
     return [true, JSON.stringify(data)]
   } else {
-    return [false, data.message]
+    return [false, data]
   }
 }
 

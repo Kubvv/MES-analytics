@@ -21,7 +21,6 @@ export default function Settings (): JSX.Element {
       dispatch(changeCurrency(val.currency))
     }
     if ('language' in val) {
-      console.log(val.language)
       setCurrentLanguage(val.language)
       void i18n.changeLanguage(val.language)
     }

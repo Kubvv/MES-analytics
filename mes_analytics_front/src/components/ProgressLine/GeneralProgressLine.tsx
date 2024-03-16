@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { type Project } from '../../interfaces/types'
-import ProgressLines from './ProgressLines'
+import ProgressLines, { type WidthType } from './ProgressLines'
 import { List, ListItem, Typography } from '@mui/material'
 import { useTypeSelector } from '../../services/hooks'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +11,7 @@ interface GeneralProgressLineProps {
 }
 
 export default function GeneralProgressLine (props: GeneralProgressLineProps): JSX.Element {
-  const [widths, setWidths] = useState(['0', '0'])
+  const [widths, setWidths] = useState<WidthType[]>([{ key: 'finalBudget', width: '0' }, { key: 'initBudget', width: '0' }])
   const [upperMarker, setUpperMarker] = useState({
     widthOffset: '0',
     text: ''
@@ -32,7 +32,7 @@ export default function GeneralProgressLine (props: GeneralProgressLineProps): J
       const upperWidthOffset = ((props.project.cost * 100 / props.maxWidth)).toFixed(4)
       const lowerWidthOffset = ((props.project.initialBudget * 100 / props.maxWidth)).toFixed(4)
       setWidths(
-        [finalPercentage, initalPercentage]
+        [{ key: 'finalBudget', width: finalPercentage }, { key: 'initBudget', width: initalPercentage }]
       )
       setUpperMarker({
         widthOffset: upperWidthOffset,

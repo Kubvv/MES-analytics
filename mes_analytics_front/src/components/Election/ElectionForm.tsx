@@ -14,7 +14,7 @@ import {
   LinearProgress
 } from '@mui/material'
 import Select, { type SelectChangeEvent } from '@mui/material/Select'
-import { type ElectionFormValues } from '../interfaces/types'
+import { type ElectionFormValues } from '../../interfaces/types'
 import { useTranslation } from 'react-i18next'
 
 interface ElectionFormProps {
@@ -92,7 +92,7 @@ export default function ElectionForm (props: ElectionFormProps): JSX.Element {
               }
               label={t('apply-add-1')}
             />
-            <Button type='submit' variant='contained' sx={{ width: '100px' }}>{t('submit')}</Button>
+            <Button type='submit' variant='contained' sx={{ minWidth: '100px', paddingX: 1 }}>{t('submit')}</Button>
           </Stack>
         </Box>
         {props.isFetching ? <LinearProgress sx={{ marginTop: 4 }}/> : <></>}

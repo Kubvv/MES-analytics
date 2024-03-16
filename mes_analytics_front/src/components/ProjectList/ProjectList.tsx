@@ -5,7 +5,7 @@ import {
   TableBody,
   TableHead,
   Table,
-  Box
+  Stack
 } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { type Project, type Order, type SortableProjectkey } from '../../interfaces/types'
@@ -14,6 +14,7 @@ import ProjectHeader from './ProjectHeader'
 import ProjectRow from './ProjectRow'
 import { stableSort, getComparator } from './Sorter'
 import { useTranslation } from 'react-i18next'
+import ProjectListLegend from './ProjectListLegend'
 
 interface ProjectListProps {
   projects: Project[]
@@ -62,25 +63,27 @@ export default function ProjectList (props: ProjectListProps): JSX.Element {
     { label: capitalize(t('name')), sorter: 'name' },
     { label: capitalize(t('cost')), sorter: 'cost' },
     { label: capitalize(t('vote-count')), sorter: 'voteCount' },
+    { label: capitalize(t('effective-vote-count')), sorter: 'effectiveVoteCount' },
     { label: capitalize(t('budget-overview')), sorter: 'finalBudget' }
   ]
 
   return (
     <>
-    <Box
+    <Stack
       width='100%'
       display='flex'
-      justifyContent='right'
+      direction='row'
+      justifyContent='space-between'
       alignItems='end'
-      margin={4}
     >
+      <ProjectListLegend/>
       <DoubleSwitch
         title={t('scale-maximum-value')}
         leftText={t('global-value')}
         rightText={t('local-value')}
         onSwitch={() => { setGlobalMaximum(!globalMaximum) }}
       />
-    </Box>
+    </Stack>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

@@ -1,45 +1,50 @@
 import React, { useState } from 'react'
-import { Box, Grid } from '@mui/material'
+import { Grid, Stack } from '@mui/material'
 import { fetchPredefinedAnalytics, fetchUploadedAnalytics } from '../api/Calls'
 import ProjectList from '../components/ProjectList/ProjectList'
-import ElectionForm from '../components/ElectionForm'
+import ElectionForm from '../components/Election/ElectionForm'
 import { useSnackbar } from 'notistack'
-import { type Project, type ElectionFormValues } from '../interfaces/types'
+import { type Election, type ElectionFormValues } from '../interfaces/types'
 import Settings from '../components/Settigns/Settings'
 import { useTranslation } from 'react-i18next'
+import ElectionSummary from '../components/Election/ElectionSummary'
+import { useTypeDispatch } from '../services/hooks'
+import { electionLoaded } from '../services/slices/colorSlice'
 
 export default function ElectionAnalytics (): JSX.Element {
-  const [projects, setProjects] = useState<Project[]>([])
+  const [election, setElection] = useState<Election | undefined>(undefined)
   const [fetching, setFetching] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation()
+  const dispatch = useTypeDispatch()
 
   const loadPredefined = async (election: string, exhaust: boolean): Promise<void> => {
     setFetching(true)
     void fetchPredefinedAnalytics(election, exhaust).then(([status, data]) => {
-      if (!status) {
-        enqueueSnackbar(`${t('failed-election-notification')} ${election}`, { variant: 'error' })
-      } else {
-        const projects = JSON.parse(data)
-        enqueueSnackbar(t('success-election-notification'), { variant: 'success' })
-        setProjects(projects)
-        setFetching(false)
-      }
+      void prepareData(election, status, data)
     })
   }
 
   const loadUploaded = async (election: File, exhaust: boolean): Promise<void> => {
     setFetching(true)
     void fetchUploadedAnalytics(election, exhaust).then(([status, data]) => {
-      if (!status) {
-        enqueueSnackbar(`${t('failed-election-notification')} ${election.name}`, { variant: 'error' })
-      } else {
-        const projects = JSON.parse(data)
-        enqueueSnackbar(t('success-election-notification'), { variant: 'success' })
-        setProjects(projects)
-        setFetching(false)
-      }
+      void prepareData(election.name, status, data)
     })
+  }
+
+  const prepareData = async (electioName: string, status: boolean, data: string): Promise<void> => {
+    if (!status) {
+      enqueueSnackbar(`${t('failed-election-notification')} ${electioName}: ${data}`, { variant: 'error' })
+    } else {
+      const election: Election = JSON.parse(data)
+      enqueueSnackbar(t('success-election-notification'), { variant: 'success' })
+      setElection(election)
+      const barColors = ['#0066ff', ...election.projects.map((_p) => {
+        return '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).slice(1, 7)
+      })]
+      dispatch(electionLoaded(barColors))
+    }
+    setFetching(false)
   }
 
   const onFormSubmit = async (values: ElectionFormValues): Promise<void> => {
@@ -66,13 +71,20 @@ export default function ElectionAnalytics (): JSX.Element {
         onSubmit={onFormSubmit}
         isFetching={fetching}
       />
-      <Box
+      {election !== undefined && (
+        <Stack
         width='90%'
+        display='flex'
+        direction='column'
       >
-        <ProjectList
-          projects={projects}
+        <ElectionSummary
+          election={election}
         />
-      </Box>
+        <ProjectList
+          projects={election.projects}
+        />
+      </Stack>
+      )}
     </Grid>
   )
 }

@@ -18,9 +18,7 @@ interface ProjectPopoverProps {
 export default function ProjectPopover (props: ProjectPopoverProps): JSX.Element {
   const { t } = useTranslation()
   const currentCurrency = useTypeSelector((state) => state.currency.currency)
-  const barColors = ['#0066ff', ...Object.keys(props.project.budgetLost).map((_bl) => {
-    return '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).slice(1, 7)
-  })]
+  const barColors = useTypeSelector((state) => state.color.colors)
 
   const capitalize = (str: string): string => {
     return str.charAt(0).toUpperCase() + str.slice(1)
