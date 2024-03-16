@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  web0:
+    container_name: back
+    build: ./mes_analytics
+    ports:
+      - "8000:8000"
+  web1:
+    container_name: front
+    build: ./mes_analytics_front
+    ports:
+      - 3000:3000
