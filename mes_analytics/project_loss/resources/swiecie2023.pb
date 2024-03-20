@@ -7,7 +7,7 @@ instance;2023
 budget;1070000
 vote_type;approval
 PROJECTS
-project_id;name;cost
+name;project_id;cost
 Bezpieczny Strażak- zakup ubrań specjalnych dla OSP Gruczno;1;68000
 Dron z kamerą termowizyjną dla Gminy Świecie;3;40000
 Zakup sprzętu do ratownictwa wodnego dla OSP Ratownik;5;20000

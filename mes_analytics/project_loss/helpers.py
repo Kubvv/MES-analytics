@@ -29,7 +29,7 @@ def run_pabutools_analytics(file_path: str, exhaust: bool) -> Election:
 
     project_losses = calculate_project_loss(budget_allocation.details)
     effective_vote_counts = calculate_effective_vote_count(budget_allocation.details)
-    projects = prepare_projects(budget_allocation.details, voter_counts, effective_vote_counts, project_losses)
+    projects = prepare_projects(instance, budget_allocation.details, voter_counts, effective_vote_counts, project_losses)
     return Election(
         instance.meta['description'],
         round(float(instance.budget_limit), 2),
@@ -40,6 +40,7 @@ def run_pabutools_analytics(file_path: str, exhaust: bool) -> Election:
     )
 
 def prepare_projects(
+    instance: Instance,
     details: AllocationDetails,
     voter_counts: dict[str, int],
     effective_vote_counts: dict[str, float],
@@ -53,7 +54,7 @@ def prepare_projects(
 
         result.append(
             Project(
-                name=project_loss.name,
+                name=instance.project_meta[project_loss]['name'],
                 round_number=idx + 1,
                 cost=round(float(project_loss.cost), 2),
                 vote_count=voter_counts[project_loss.name],
