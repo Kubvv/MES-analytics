@@ -3,13 +3,15 @@ import { Box } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
 import { useTypeDispatch } from '../../services/hooks'
 import { projectHovered, projectUnHovered } from '../../services/slices/projectHighlightSlice'
+import 'tippy.js/dist/tippy.css'
 
 interface ProgressLineProps {
   width: string
   mostLost: string[]
   backgroundColor: string
-  tooltip: JSX.Element | undefined
+  tooltip?: string | JSX.Element
   hoverHiglight: boolean
+  render?: boolean
 }
 
 export default function ProgressLine (props: ProgressLineProps): JSX.Element {
@@ -31,6 +33,18 @@ export default function ProgressLine (props: ProgressLineProps): JSX.Element {
           backgroundColor: props.backgroundColor,
           transition: 'width 2s'
         }}
+      />
+    )
+  }
+
+  if (props.render === true) {
+    return (
+      <div
+        style={{
+          width: `${props.width}%`,
+          backgroundColor: props.backgroundColor
+        }}
+        data-tippy-content={props.tooltip}
       />
     )
   }

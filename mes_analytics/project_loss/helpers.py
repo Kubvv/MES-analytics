@@ -2,7 +2,7 @@ import os
 
 from pabutools.analysis import ProjectLoss, calculate_project_loss
 from pabutools.election import GroupSatisfactionMeasure, Instance, parse_pabulib, Cost_Sat
-from pabutools.rules import AllocationDetails, method_of_equal_shares, exhaustion_by_budget_increase, MESAllocationDetails
+from pabutools.rules import AllocationDetails, method_of_equal_shares, exhaustion_by_budget_increase
 from project_loss.models import Project, Election
 
 def run_pabutools_analytics(file_path: str, exhaust: bool) -> Election:
@@ -50,7 +50,7 @@ def prepare_projects(
     for idx, project_loss in enumerate(project_losses):
         simplfied_budget_lost: dict[str, float] = {}
         for proj, val in project_loss.budget_lost.items():
-            simplfied_budget_lost[proj.name] = round(float(val), 2)
+            simplfied_budget_lost[instance.project_meta[proj]['name']] = round(float(val), 2)
 
         result.append(
             Project(

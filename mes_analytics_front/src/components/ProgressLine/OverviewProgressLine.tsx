@@ -10,10 +10,23 @@ interface OverviewProgressLineProps {
   backgroundColors: string[]
   maxWidth: number
   unspent: number
+  render?: boolean
 }
 
 export default function OverviewProgressLine (props: OverviewProgressLineProps): JSX.Element {
-  const [widths, setWidths] = useState<WidthType[]>(props.projects.map((project) => { return { key: project.name, width: '0' } }))
+  const calculateWidths = (): WidthType[] => {
+    const unspentWidth = (props.unspent * 100 / props.maxWidth).toFixed(4)
+    const costWidths = props.projects.map((project) => {
+      return { key: project.name, width: (project.cost * 100 / props.maxWidth).toFixed(4) }
+    })
+    return [{ key: 'unspent ', width: unspentWidth }, ...costWidths]
+  }
+
+  const [widths, setWidths] = useState<WidthType[]>(
+    props.render === true
+      ? calculateWidths()
+      : props.projects.map((project) => { return { key: project.name, width: '0' } })
+  )
   const currentCurrency = useTypeSelector((state) => state.currency.currency)
   const { t } = useTranslation()
   const lowerMarker = {
@@ -23,21 +36,23 @@ export default function OverviewProgressLine (props: OverviewProgressLineProps):
 
   useEffect(() => {
     requestAnimationFrame(() => {
-      const unspentWidth = (props.unspent * 100 / props.maxWidth).toFixed(4)
-      const costWidths = props.projects.map((project) => {
-        return { key: project.name, width: (project.cost * 100 / props.maxWidth).toFixed(4) }
-      })
-
-      setWidths([{ key: 'unspent ', width: unspentWidth }, ...costWidths])
+      setWidths(calculateWidths())
     })
   }, [props.projects, props.maxWidth])
 
-  const tooltips = [
-    <Typography key={'unspent'} variant='subtitle2'>{t('unspent')}: {props.unspent}{currentCurrency}</Typography>,
-    ...props.projects.map((project) => {
-      return <Typography key={project.name} variant='subtitle2'>{project.name}: {project.cost}{currentCurrency}</Typography>
-    })
-  ]
+  const tooltips = props.render === true
+    ? [
+        `${t('unspent')}: ${props.unspent}${currentCurrency}`,
+        ...props.projects.map((project) => {
+          return `${project.name}: ${project.cost}${currentCurrency}`
+        })
+      ]
+    : [
+        <Typography key={'unspent'} variant='subtitle2'>{t('unspent')}: {props.unspent}{currentCurrency}</Typography>,
+        ...props.projects.map((project) => {
+          return <Typography key={project.name} variant='subtitle2'>{project.name}: {project.cost}{currentCurrency}</Typography>
+        })
+      ]
 
   return (
     <ProgressLines
@@ -49,6 +64,7 @@ export default function OverviewProgressLine (props: OverviewProgressLineProps):
       backgroundColors={props.backgroundColors}
       tooltips={tooltips}
       hoverHiglights={undefined}
+      render={props.render}
     />
   )
 };

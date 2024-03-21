@@ -11,6 +11,8 @@ import ElectionSummary from '../components/Election/ElectionSummary'
 import { useTypeDispatch } from '../services/hooks'
 import { electionLoaded } from '../services/slices/colorSlice'
 
+import ExportButton from '../components/ExportButton'
+
 export default function ElectionAnalytics (): JSX.Element {
   const [election, setElection] = useState<Election | undefined>(undefined)
   const [fetching, setFetching] = useState(false)
@@ -73,17 +75,20 @@ export default function ElectionAnalytics (): JSX.Element {
       />
       {election !== undefined && (
         <Stack
-        width='90%'
-        display='flex'
-        direction='column'
-      >
-        <ElectionSummary
-          election={election}
-        />
-        <ProjectList
-          projects={election.projects}
-        />
-      </Stack>
+          width='90%'
+          display='flex'
+          direction='column'
+        >
+          <ExportButton
+            election={election}
+          />
+          <ElectionSummary
+            election={election}
+          />
+          <ProjectList
+            projects={election.projects}
+          />
+        </Stack>
       )}
     </Grid>
   )

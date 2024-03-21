@@ -18,20 +18,25 @@ import ProjectListLegend from './ProjectListLegend'
 
 interface ProjectListProps {
   projects: Project[]
+  render?: boolean
 }
 
 export default function ProjectList (props: ProjectListProps): JSX.Element {
-  const [maxValue, setMaxValue] = useState(0)
+  const calculateMaxValue = (): number => {
+    const projectMaxes = props.projects.map((project): number => {
+      return Math.max(project.cost, project.initialBudget)
+    })
+    return Math.max(...projectMaxes)
+  }
+
+  const [maxValue, setMaxValue] = useState(calculateMaxValue())
   const [globalMaximum, setGlobalMaximum] = useState(true)
   const [order, setOrder] = useState<Order>('asc')
   const [orderBy, setOrderBy] = useState<SortableProjectkey>('roundNumber')
   const { t } = useTranslation()
 
   useEffect(() => {
-    const projectMaxes = props.projects.map((project): number => {
-      return Math.max(project.cost, project.initialBudget)
-    })
-    setMaxValue(Math.max(...projectMaxes))
+    setMaxValue(calculateMaxValue())
     setOrder('asc')
     setOrderBy('roundNumber')
   }, [props.projects])
@@ -77,12 +82,12 @@ export default function ProjectList (props: ProjectListProps): JSX.Element {
       alignItems='end'
     >
       <ProjectListLegend/>
-      <DoubleSwitch
+      {props.render !== true && <DoubleSwitch
         title={t('scale-maximum-value')}
         leftText={t('global-value')}
         rightText={t('local-value')}
         onSwitch={() => { setGlobalMaximum(!globalMaximum) }}
-      />
+      />}
     </Stack>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -107,6 +112,7 @@ export default function ProjectList (props: ProjectListProps): JSX.Element {
                 project={project}
                 globalMaximum={globalMaximum}
                 maxValue={maxValue}
+                render={props.render}
               />
             ))}
           </TableBody>

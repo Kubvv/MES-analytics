@@ -12,6 +12,7 @@ import OverviewProgressLine from '../ProgressLine/OverviewProgressLine'
 
 interface ElectionSummaryProps {
   election: Election
+  render?: boolean
 }
 
 export default function ElectionSummary (props: ElectionSummaryProps): JSX.Element {
@@ -49,6 +50,7 @@ export default function ElectionSummary (props: ElectionSummaryProps): JSX.Eleme
           maxWidth={props.election.initialBudget}
           backgroundColors={barColors}
           unspent={unspent}
+          render={props.render}
         ></OverviewProgressLine>
       </Box>
     </Stack>

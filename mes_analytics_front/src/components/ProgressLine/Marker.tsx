@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
 
-interface MarkerType {
+export interface MarkerType {
   widthOffset: string
   text: string
 }

@@ -10,12 +10,30 @@ interface ProjectRowProps {
   project: Project
   globalMaximum: boolean
   maxValue: number
+  render?: boolean
 }
 
 export default function ProjectHeader (props: ProjectRowProps): JSX.Element {
+  const chooseColor = (): string => {
+    if (props.project.cost > props.project.initialBudget) {
+      return notEnoughInitialBudgetColor
+    }
+    if (props.project.cost > props.project.finalBudget) {
+      return notEnoughFinalBugdetColor
+    }
+    if (highlights.includes(props.project.name)) {
+      return pickedColorHighlighted
+    }
+    return pickedColor
+  }
+
   const highlights = useTypeSelector((state) => state.projectHighlight.highlights)
   const currentCurrency = useTypeSelector((state) => state.currency.currency)
-  const [projectColor, setProjetColor] = useState<string>('white')
+  const [projectColor, setProjetColor] = useState<string>(
+    props.render === true
+      ? chooseColor()
+      : 'white'
+  )
   const [anchorEl, setAnchorEl] = React.useState<HTMLAnchorElement | null>(null)
 
   const handleLinkClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
@@ -30,15 +48,7 @@ export default function ProjectHeader (props: ProjectRowProps): JSX.Element {
   const id = open ? `popover-${props.project.name}` : undefined
 
   useEffect(() => {
-    if (props.project.cost > props.project.initialBudget) {
-      setProjetColor(notEnoughInitialBudgetColor)
-    } else if (props.project.cost > props.project.finalBudget) {
-      setProjetColor(notEnoughFinalBugdetColor)
-    } else if (highlights.includes(props.project.name)) {
-      setProjetColor(pickedColorHighlighted)
-    } else {
-      setProjetColor(pickedColor)
-    }
+    setProjetColor(chooseColor())
   }, [props.project, highlights])
 
   return (
@@ -65,6 +75,7 @@ export default function ProjectHeader (props: ProjectRowProps): JSX.Element {
         <GeneralProgressLine
           project={props.project}
           maxWidth={props.globalMaximum ? props.maxValue : Math.max(props.project.initialBudget, props.project.cost)}
+          render={props.render}
         />
       </TableCell>
       <Popover

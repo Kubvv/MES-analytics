@@ -17,11 +17,12 @@ interface ProgressLinesProps {
   maxWidth: number
   widths: WidthType[]
   mostLost: string[]
-  upperMarker: MarkerType | undefined
-  lowerMarker: MarkerType | undefined
+  upperMarker?: MarkerType
+  lowerMarker?: MarkerType
   backgroundColors: string[]
-  tooltips: JSX.Element[] | undefined
-  hoverHiglights: boolean[] | undefined
+  tooltips?: string[] | JSX.Element[]
+  hoverHiglights?: boolean[]
+  render?: boolean
 }
 
 export default function ProgressLines (props: ProgressLinesProps): JSX.Element {
@@ -58,6 +59,7 @@ export default function ProgressLines (props: ProgressLinesProps): JSX.Element {
             backgroundColor={props.backgroundColors[idx]}
             tooltip={tooltips[idx]}
             hoverHiglight={hoverHiglights[idx]}
+            render={props.render}
           />
         ))}
       </Box>
