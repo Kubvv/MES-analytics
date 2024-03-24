@@ -101,6 +101,7 @@ export default function ProjectList (props: ProjectListProps): JSX.Element {
                     order={order}
                     side={idx < 2 ? 'left' : 'right'}
                     onSort={handleRequestSort}
+                    render={props.render}
                   />
                 ))}
               </TableRow>

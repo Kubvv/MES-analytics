@@ -60,13 +60,21 @@ export default function ProjectHeader (props: ProjectRowProps): JSX.Element {
         <Typography fontWeight={400} fontSize={16}>{props.project.roundNumber}</Typography>
       </TableCell>
       <TableCell align="left">
-        <Link
-          fontWeight={400}
-          fontSize={16}
-          onClick={(e) => { handleLinkClick(e) }}
-          sx={{ cursor: 'pointer', color: 'black', textDecorationColor: 'black' }}>
+        {props.render === true
+          ? <Typography
+            fontWeight={400}
+            fontSize={16}
+          >
             {props.project.name}
-        </Link>
+          </Typography>
+          : <Link
+            fontWeight={400}
+            fontSize={16}
+            onClick={(e) => { handleLinkClick(e) }}
+            sx={{ cursor: 'pointer', color: 'black', textDecorationColor: 'black' }}>
+            {props.project.name}
+          </Link>
+        }
       </TableCell>
       <TableCell align="right"><Typography fontWeight={400} fontSize={16}>{props.project.cost}{currentCurrency}</Typography></TableCell>
       <TableCell align="right"><Typography fontWeight={400} fontSize={16}>{props.project.voteCount}</Typography></TableCell>

@@ -8,6 +8,7 @@ interface ProjectHeaderProps {
   orderBy: SortableProjectkey
   side: 'left' | 'right'
   onSort: (property: SortableProjectkey) => void
+  render?: boolean
 }
 
 export default function ProjectHeader (props: ProjectHeaderProps): JSX.Element {
@@ -15,13 +16,18 @@ export default function ProjectHeader (props: ProjectHeaderProps): JSX.Element {
 
   return (
     <TableCell key={header.label} align={props.side} variant="head" sx={{ fontWeight: 600 }}>
-      <TableSortLabel
-        active={props.orderBy === header.sorter}
-        direction={props.orderBy === header.sorter ? props.order : 'asc'}
-        onClick={() => { props.onSort(header.sorter) }}
-      >
-        {header.label}
-      </TableSortLabel>
+      {props.render === true
+        ? <>
+          {header.label}
+        </>
+        : <TableSortLabel
+          active={props.orderBy === header.sorter}
+          direction={props.orderBy === header.sorter ? props.order : 'asc'}
+          onClick={() => { props.onSort(header.sorter) }}
+        >
+          {header.label}
+        </TableSortLabel>
+      }
     </TableCell>
   )
 }

@@ -54,7 +54,7 @@ export default function ElectionForm (props: ElectionFormProps): JSX.Element {
   const defaultElections = [{ text: 'Świecie 2023', value: 'swiecie2023' }, { text: 'Wieliczka 2023', value: 'wieliczka2023' }]
 
   return (
-    <Paper sx={{ minWidth: '300px', width: '60%', margin: '20px', padding: '15px' }}>
+    <Paper sx={{ minWidth: '300px', width: '60%', margin: '20px', padding: '25px' }}>
         <Box component="form" onSubmit={(e) => { void handleSubmit(e) }} sx={{ width: '100%' }}>
           <Stack
             display='flex'

@@ -19,13 +19,13 @@ export default function OverviewProgressLine (props: OverviewProgressLineProps):
     const costWidths = props.projects.map((project) => {
       return { key: project.name, width: (project.cost * 100 / props.maxWidth).toFixed(4) }
     })
-    return [{ key: 'unspent ', width: unspentWidth }, ...costWidths]
+    return [{ key: 'unspent', width: unspentWidth }, ...costWidths]
   }
 
   const [widths, setWidths] = useState<WidthType[]>(
     props.render === true
       ? calculateWidths()
-      : props.projects.map((project) => { return { key: project.name, width: '0' } })
+      : [{ key: 'unspent', width: '0' }, ...props.projects.map((project) => { return { key: project.name, width: '0' } })]
   )
   const currentCurrency = useTypeSelector((state) => state.currency.currency)
   const { t } = useTranslation()
