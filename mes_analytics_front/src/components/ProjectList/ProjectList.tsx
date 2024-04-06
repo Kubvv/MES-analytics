@@ -63,12 +63,13 @@ export default function ProjectList (props: ProjectListProps): JSX.Element {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
 
+  const effHeader: { label: string, sorter: SortableProjectkey } = { label: capitalize(t('effective-support')), sorter: 'effectiveSupport' }
   const headers: Array<{ label: string, sorter: SortableProjectkey }> = [
     { label: capitalize(t('round')), sorter: 'roundNumber' },
     { label: capitalize(t('name')), sorter: 'name' },
     { label: capitalize(t('cost')), sorter: 'cost' },
     { label: capitalize(t('vote-count')), sorter: 'voteCount' },
-    { label: capitalize(t('effective-vote-count')), sorter: 'effectiveVoteCount' },
+    ...props.projects[0].effectiveSupport === -1 ? [] : [effHeader],
     { label: capitalize(t('budget-overview')), sorter: 'finalBudget' }
   ]
 

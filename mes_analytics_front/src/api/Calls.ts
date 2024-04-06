@@ -2,16 +2,25 @@ const url = 'http://localhost:8000'
 
 async function fetchPredefinedAnalytics (
   election: string,
-  exhaust: boolean
+  exhaust: boolean,
+  effSupport: boolean
 ): Promise<[ok: boolean, data: string]> {
-  return await fetchWithoutBody(`mes/${election}${exhaust ? '?exhaust' : ''}`, 'GET')
+  const flags = await prepareFlags([{ name: 'exhaust', on: exhaust }, { name: 'eff-support', on: effSupport }])
+  return await fetchWithoutBody(`mes/${election}${flags}`, 'GET')
 }
 
 async function fetchUploadedAnalytics (
   election: File,
-  exhaust: boolean
+  exhaust: boolean,
+  effSupport: boolean
 ): Promise<[ok: boolean, data: string]> {
-  return await fetchWithFileBody(`mes/upload${exhaust ? '?exhaust' : ''}`, 'POST', election)
+  const flags = await prepareFlags([{ name: 'exhaust', on: exhaust }, { name: 'eff-support', on: effSupport }])
+  return await fetchWithFileBody(`mes/upload${flags}`, 'POST', election)
+}
+
+async function prepareFlags (flags: Array<{ name: string, on: boolean }>): Promise<string> {
+  const trueFlags = flags.filter(flag => flag.on).map(flag => flag.name)
+  return trueFlags.length === 0 ? '' : '?' + trueFlags.join('&')
 }
 
 async function fetchWithoutBody (

@@ -78,7 +78,9 @@ export default function ProjectHeader (props: ProjectRowProps): JSX.Element {
       </TableCell>
       <TableCell align="right"><Typography fontWeight={400} fontSize={16}>{props.project.cost}{currentCurrency}</Typography></TableCell>
       <TableCell align="right"><Typography fontWeight={400} fontSize={16}>{props.project.voteCount}</Typography></TableCell>
-      <TableCell align="right" width={'10%'}><Typography fontWeight={400} fontSize={16}>{Math.round(props.project.effectiveVoteCount)}</Typography></TableCell>
+      { props.project.effectiveSupport !== -1 &&
+        <TableCell align="right" width={'10%'}><Typography fontWeight={400} fontSize={16}>{props.project.effectiveSupport}%</Typography></TableCell>
+      }
       <TableCell align="right" width={'25%'} sx={{ padding: '12px' }}>
         <GeneralProgressLine
           project={props.project}

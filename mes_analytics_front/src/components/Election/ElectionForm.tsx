@@ -26,7 +26,8 @@ export default function ElectionForm (props: ElectionFormProps): JSX.Element {
   const [values, setValues] = useState<ElectionFormValues>({
     defaultElection: '',
     uploadedElection: undefined,
-    exhaust: false
+    exhaust: false,
+    effSupport: false
   })
   const [clearUpload, setClearUpload] = useState(0)
   const { t } = useTranslation()
@@ -82,16 +83,31 @@ export default function ElectionForm (props: ElectionFormProps): JSX.Element {
               type='file'
               onChange={(e) => { handleFileChange(e) }}
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={values.exhaust}
-                  name='exhaust'
-                  onChange={(e) => { handleCheckChange(e) }}
-                />
-              }
-              label={t('apply-add-1')}
-            />
+            <Stack
+              display='flex'
+              direction='row'
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={values.exhaust}
+                    name='exhaust'
+                    onChange={(e) => { handleCheckChange(e) }}
+                  />
+                }
+                label={t('apply-add-1')}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={values.effSupport}
+                    name='effSupport'
+                    onChange={(e) => { handleCheckChange(e) }}
+                  />
+                }
+                label={t('calculate-effective-support')}
+              />
+            </Stack>
             <Button type='submit' variant='contained' sx={{ minWidth: '100px', paddingX: 1 }}>{t('submit')}</Button>
           </Stack>
         </Box>

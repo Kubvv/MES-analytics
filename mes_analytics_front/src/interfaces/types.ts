@@ -12,7 +12,7 @@ interface Project {
   roundNumber: number
   cost: number
   voteCount: number
-  effectiveVoteCount: number
+  effectiveSupport: number
   initialBudget: number
   finalBudget: number
   wasPicked: boolean
@@ -23,10 +23,11 @@ interface ElectionFormValues {
   defaultElection: string
   uploadedElection: File | undefined
   exhaust: boolean
+  effSupport: boolean
 }
 
 type Order = 'asc' | 'desc'
-type SortableProjectkey = 'roundNumber' | 'name' | 'cost' | 'voteCount' | 'effectiveVoteCount' | 'finalBudget'
+type SortableProjectkey = 'roundNumber' | 'name' | 'cost' | 'voteCount' | 'effectiveSupport' | 'finalBudget'
 type Currency = 'zł' | '$' | '€' | '£'
 type Language = 'en' | 'pl' | 'fr'
 

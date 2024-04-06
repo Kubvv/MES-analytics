@@ -20,16 +20,16 @@ export default function ElectionAnalytics (): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useTypeDispatch()
 
-  const loadPredefined = async (election: string, exhaust: boolean): Promise<void> => {
+  const loadPredefined = async (election: string, exhaust: boolean, effSupport: boolean): Promise<void> => {
     setFetching(true)
-    void fetchPredefinedAnalytics(election, exhaust).then(([status, data]) => {
+    void fetchPredefinedAnalytics(election, exhaust, effSupport).then(([status, data]) => {
       void prepareData(election, status, data)
     })
   }
 
-  const loadUploaded = async (election: File, exhaust: boolean): Promise<void> => {
+  const loadUploaded = async (election: File, exhaust: boolean, effSupport: boolean): Promise<void> => {
     setFetching(true)
-    void fetchUploadedAnalytics(election, exhaust).then(([status, data]) => {
+    void fetchUploadedAnalytics(election, exhaust, effSupport).then(([status, data]) => {
       void prepareData(election.name, status, data)
     })
   }
@@ -51,9 +51,9 @@ export default function ElectionAnalytics (): JSX.Element {
 
   const onFormSubmit = async (values: ElectionFormValues): Promise<void> => {
     if (values.defaultElection !== '') {
-      await loadPredefined(values.defaultElection, values.exhaust)
+      await loadPredefined(values.defaultElection, values.exhaust, values.effSupport)
     } else if (values.uploadedElection !== undefined) {
-      await loadUploaded(values.uploadedElection, values.exhaust)
+      await loadUploaded(values.uploadedElection, values.exhaust, values.effSupport)
     } else {
       enqueueSnackbar(t('no-election-notification'), { variant: 'warning' })
     }
