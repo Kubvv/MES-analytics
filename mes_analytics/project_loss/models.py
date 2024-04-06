@@ -24,7 +24,7 @@ class Project:
         name,
         cost,
         vote_count,
-        effective_vote_count,
+        effective_support,
         initial_budget,
         final_budget,
         budget_lost,
@@ -33,7 +33,7 @@ class Project:
         self.roundNumber: int = round_number
         self.cost: float = cost
         self.voteCount: int = vote_count
-        self.effectiveVoteCount: float = effective_vote_count
+        self.effectiveSupport: float = effective_support
         self.initialBudget: float = initial_budget
         self.finalBudget: float = final_budget
         self.wasPicked: bool = final_budget >= cost

@@ -1,11 +1,11 @@
 import os
 
-from pabutools.analysis import ProjectLoss, calculate_project_loss
-from pabutools.election import GroupSatisfactionMeasure, Instance, parse_pabulib, Cost_Sat
+from pabutools.analysis import ProjectLoss, calculate_project_loss, calculate_effective_supports
+from pabutools.election import GroupSatisfactionMeasure, Instance, parse_pabulib, Cost_Sat, Profile
 from pabutools.rules import AllocationDetails, method_of_equal_shares, exhaustion_by_budget_increase
 from project_loss.models import Project, Election
 
-def run_pabutools_analytics(file_path: str, exhaust: bool) -> Election:
+def run_pabutools_analytics(file_path: str, exhaust: bool, eff_support: bool) -> Election:
     try: 
         instance, profile = parse_pabulib(file_path)
     except:
@@ -14,13 +14,15 @@ def run_pabutools_analytics(file_path: str, exhaust: bool) -> Election:
     voter_counts = calculate_voter_counts(
         instance, sat_profile
     )
+    initial_budget = round(float(instance.budget_limit), 2)
 
     if exhaust: 
         budget_allocation = exhaustion_by_budget_increase(
             instance,
             profile,
             rule=method_of_equal_shares,
-            rule_params={ "analytics": True, "sat_profile": sat_profile }
+            rule_params={ "analytics": True, "sat_profile": sat_profile },
+            budget_step=len(profile)
         )
     else:
         budget_allocation = method_of_equal_shares(
@@ -28,13 +30,15 @@ def run_pabutools_analytics(file_path: str, exhaust: bool) -> Election:
         )
 
     project_losses = calculate_project_loss(budget_allocation.details)
-    effective_vote_counts = calculate_effective_vote_count(budget_allocation.details)
-    projects = prepare_projects(instance, budget_allocation.details, voter_counts, effective_vote_counts, project_losses)
+    effective_supports = {}
+    if eff_support:
+        effective_supports = get_effective_supports(instance, profile, { "sat_profile": sat_profile }, budget_allocation.details)
+    projects = prepare_projects(instance, budget_allocation.details, voter_counts, effective_supports, project_losses)
     return Election(
         instance.meta['description'],
-        round(float(instance.budget_limit), 2),
+        initial_budget,
         len(profile),
-        round(float(budget_allocation.details.initial_budget_per_voter), 2),
+        round(float(budget_allocation.details.iterations[0].voters_budget[0]), 2),
         exhaust,
         projects
     )
@@ -43,10 +47,11 @@ def prepare_projects(
     instance: Instance,
     details: AllocationDetails,
     voter_counts: dict[str, int],
-    effective_vote_counts: dict[str, float],
+    effective_supports: dict[str, int],
     project_losses: list[ProjectLoss],
 ) -> list[Project]:
     result: list[Project] = []
+    initial_budget_per_voter = details.iterations[0].voters_budget[0]
     for idx, project_loss in enumerate(project_losses):
         simplfied_budget_lost: dict[str, float] = {}
         for proj, val in project_loss.budget_lost.items():
@@ -58,11 +63,11 @@ def prepare_projects(
                 round_number=idx + 1,
                 cost=round(float(project_loss.cost), 2),
                 vote_count=voter_counts[project_loss.name],
-                effective_vote_count=effective_vote_counts[project_loss.name],
+                effective_support=effective_supports[project_loss.name] if project_loss.name in effective_supports else -1,
                 initial_budget=round(
                     float(
                         voter_counts[project_loss.name]
-                        * details.initial_budget_per_voter
+                        * initial_budget_per_voter
                     ),
                     2,
                 ),
@@ -86,12 +91,12 @@ def calculate_voter_counts(
 
     return result
 
-def calculate_effective_vote_count(
-    details: AllocationDetails
-) -> dict[str, float]:
-    result: dict[str, float] = {}
-    for iteration in details.iterations:
-        project = iteration.project
-        result[project.name] = float(1 / project.affordability)
+def get_effective_supports(
+    instance: Instance, profile: Profile, mes_params: dict, details: AllocationDetails
+) -> dict[str, int]:
+    res: dict[str, int] = {}
+    for project, support in calculate_effective_supports(instance, profile, mes_params, details.get_final_budget()).items():
+        res[project.name] = support
+    return res
 
-    return result
+
