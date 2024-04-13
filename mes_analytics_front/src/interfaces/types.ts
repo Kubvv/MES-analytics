@@ -22,8 +22,13 @@ interface Project {
 interface ElectionFormValues {
   defaultElection: string
   uploadedElection: File | undefined
-  exhaust: boolean
-  effSupport: boolean
+  options: ElectionFormOptions
+}
+
+interface ElectionFormOptions {
+  'exhaust': boolean,
+  'feasibileExhaust': boolean,
+  'effSupport': boolean
 }
 
 type Order = 'asc' | 'desc'
@@ -38,6 +43,7 @@ export type {
   Election,
   Project,
   ElectionFormValues,
+  ElectionFormOptions,
   Order,
   SortableProjectkey,
   Currency,

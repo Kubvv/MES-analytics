@@ -4,7 +4,7 @@ import { fetchPredefinedAnalytics, fetchUploadedAnalytics } from '../api/Calls'
 import ProjectList from '../components/ProjectList/ProjectList'
 import ElectionForm from '../components/Election/ElectionForm'
 import { useSnackbar } from 'notistack'
-import { type Election, type ElectionFormValues } from '../interfaces/types'
+import { type Election, type ElectionFormValues, type ElectionFormOptions } from '../interfaces/types'
 import Settings from '../components/Settigns/Settings'
 import { useTranslation } from 'react-i18next'
 import ElectionSummary from '../components/Election/ElectionSummary'
@@ -20,16 +20,16 @@ export default function ElectionAnalytics (): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useTypeDispatch()
 
-  const loadPredefined = async (election: string, exhaust: boolean, effSupport: boolean): Promise<void> => {
+  const loadPredefined = async (election: string, options: ElectionFormOptions): Promise<void> => {
     setFetching(true)
-    void fetchPredefinedAnalytics(election, exhaust, effSupport).then(([status, data]) => {
+    void fetchPredefinedAnalytics(election, options).then(([status, data]) => {
       void prepareData(election, status, data)
     })
   }
 
-  const loadUploaded = async (election: File, exhaust: boolean, effSupport: boolean): Promise<void> => {
+  const loadUploaded = async (election: File, options: ElectionFormOptions): Promise<void> => {
     setFetching(true)
-    void fetchUploadedAnalytics(election, exhaust, effSupport).then(([status, data]) => {
+    void fetchUploadedAnalytics(election, options).then(([status, data]) => {
       void prepareData(election.name, status, data)
     })
   }
@@ -51,9 +51,9 @@ export default function ElectionAnalytics (): JSX.Element {
 
   const onFormSubmit = async (values: ElectionFormValues): Promise<void> => {
     if (values.defaultElection !== '') {
-      await loadPredefined(values.defaultElection, values.exhaust, values.effSupport)
+      await loadPredefined(values.defaultElection, values.options)
     } else if (values.uploadedElection !== undefined) {
-      await loadUploaded(values.uploadedElection, values.exhaust, values.effSupport)
+      await loadUploaded(values.uploadedElection, values.options)
     } else {
       enqueueSnackbar(t('no-election-notification'), { variant: 'warning' })
     }

@@ -1,25 +1,31 @@
+
+import { type ElectionFormOptions } from '../interfaces/types'
+
 const url = 'http://localhost:8000'
 
 async function fetchPredefinedAnalytics (
   election: string,
-  exhaust: boolean,
-  effSupport: boolean
+  options: ElectionFormOptions
 ): Promise<[ok: boolean, data: string]> {
-  const flags = await prepareFlags([{ name: 'exhaust', on: exhaust }, { name: 'eff-support', on: effSupport }])
+  const flags = await prepareFlags(options)
   return await fetchWithoutBody(`mes/${election}${flags}`, 'GET')
 }
 
 async function fetchUploadedAnalytics (
   election: File,
-  exhaust: boolean,
-  effSupport: boolean
+  options: ElectionFormOptions
 ): Promise<[ok: boolean, data: string]> {
-  const flags = await prepareFlags([{ name: 'exhaust', on: exhaust }, { name: 'eff-support', on: effSupport }])
+  const flags = await prepareFlags(options)
   return await fetchWithFileBody(`mes/upload${flags}`, 'POST', election)
 }
 
-async function prepareFlags (flags: Array<{ name: string, on: boolean }>): Promise<string> {
-  const trueFlags = flags.filter(flag => flag.on).map(flag => flag.name)
+async function prepareFlags (options: ElectionFormOptions): Promise<string> {
+  const nameMap = new Map<keyof ElectionFormOptions, string>([
+    ['exhaust', 'exhaust'],
+    ['feasibileExhaust', 'feasible-stop'],
+    ['effSupport', 'eff-support']
+  ])
+  const trueFlags = Object.keys(options).filter(option => options[option as keyof ElectionFormOptions]).map(option => nameMap.get(option as keyof ElectionFormOptions))
   return trueFlags.length === 0 ? '' : '?' + trueFlags.join('&')
 }
 

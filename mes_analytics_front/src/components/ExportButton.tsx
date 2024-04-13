@@ -1,5 +1,5 @@
-import { Button, Stack, Box } from '@mui/material'
 import React from 'react'
+import { Button, Stack, Box, Grid } from '@mui/material'
 import { renderToString } from 'react-dom/server'
 import { type Election } from '../interfaces/types'
 import ElectionSummary from './Election/ElectionSummary'
@@ -31,24 +31,29 @@ export default function ExportButton (props: ExportButtonProps): JSX.Element {
                 backgroundColor: '#e3e3e3'
               }}
             >
-              <Stack
-                display='flex'
-                direction='column'
-                alignItems='center'
-                justifyContent='center'
-                sx={{
-                  padding: '100px'
-                }}
+              <Grid
+                container
+                display="flex"
+                direction="column"
+                alignItems="center"
+                justifyContent="center"
+                padding={4}
               >
-                <ElectionSummary
-                  election={props.election}
-                  render
-                />
-                <ProjectList
-                  projects={props.election.projects}
-                  render
-                />
-              </Stack>
+                <Stack
+                  width='90%'
+                  display='flex'
+                  direction='column'
+                >
+                  <ElectionSummary
+                    election={props.election}
+                    render
+                  />
+                  <ProjectList
+                    projects={props.election.projects}
+                    render
+                  />
+                </Stack>
+              </Grid>
             </Box>
           </I18nextProvider>
         </Provider>
