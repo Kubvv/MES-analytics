@@ -42,9 +42,9 @@ export default function SettingButtons (props: SettingButtonsProps<CurrencyWrapp
             borderTopRightRadius: idx === props.settings.length - 1 ? 20 : 0,
             borderBottomRightRadius: idx === props.settings.length - 1 ? 20 : 0,
             borderLeft: idx === 0 ? '1px soild' : 0,
-            bgcolor: setting === props.currentSetting ? props.highlightColor : 'white',
+            bgcolor: JSON.stringify(setting) === JSON.stringify(props.currentSetting) ? props.highlightColor : 'white',
             ':hover': {
-              bgcolor: setting === props.currentSetting ? props.highlightColor : 'white' // theme.palette.primary.main
+              bgcolor: props.highlightColor
             }
           }}
         >

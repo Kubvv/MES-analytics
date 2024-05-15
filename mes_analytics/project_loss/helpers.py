@@ -6,10 +6,7 @@ from pabutools.rules import BudgetAllocation, AllocationDetails, method_of_equal
 from project_loss.models import Project, Election
 
 def run_pabutools_analytics(file_path: str, options: dict[str, bool]) -> Election:
-    try: 
-        instance, profile = parse_pabulib(file_path)
-    except:
-        raise RuntimeError("Provided file is in a wrong format")
+    instance, profile = parse_pabulib(file_path)
     sat_profile = profile.as_sat_profile(sat_class=Cost_Sat)
     voter_counts = calculate_voter_counts(
         instance, sat_profile
